@@ -7,27 +7,27 @@ class APIException(Exception):
 
 class CurrencyConverter:
     @staticmethod
-    def get_price(quote, base, amount):
+    def get_price(base, quote, amount):
         try:
-            r = requests.get(f'https://min-api.cryptocompare.com/data/price?fsym={keys[quote]}&tsyms={keys[base]}')
-            exchange_rate = json.loads(r.content)[keys[base]]
+            r = requests.get(f'https://min-api.cryptocompare.com/data/price?fsym={keys[base]}&tsyms={keys[quote]}')
+            exchange_rate = json.loads(r.content)[keys[quote]] #base?
             return exchange_rate * float(amount)
         except Exception as e:
             raise APIException(f"Ошибка при получении цены: {e}")
 
     @staticmethod
-    def convert(quote: str, base: str, amount: str):
+    def convert(base: str, quote: str, amount: str):
         if quote == base:
             raise APIException(f'Невозможно перевести одинаковые валюты {base}.')
 
         try:
             quote_ticker = keys[quote]
         except KeyError:
-            raise APIException(f'Не удалось обработать валюту {quote}')
+            raise APIException(f'Не удалось обработать валюту {quote}. Проверетьте правильность написания валюты')
 
         try:
             base_ticker = keys[base]
         except KeyError:
-            raise APIException(f'Не удалось обработать валюту {base}')
+            raise APIException(f'Не удалось обработать валюту {base}. Проверетьте правильность написания валюты')
 
-        return CurrencyConverter.get_price(quote, base, amount)
+        return CurrencyConverter.get_price(base, quote, amount)

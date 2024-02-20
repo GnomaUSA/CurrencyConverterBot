@@ -28,14 +28,14 @@ def convert(message: telebot.types.Message):
         if len(values) != 3:
             raise APIException('Некорректное количество параметров')
 
-        quote, base, amount = values
-        total_base = CurrencyConverter.convert(quote, base, amount)
+        base, quote, amount = values
+        total_base = CurrencyConverter.convert(base, quote, amount)
     except APIException as e:
         bot.reply_to(message, f'Ошибка пользователя.\n{e}')
     except Exception as e:
         bot.reply_to(message, f'Не удалось выполнить команду\n{e}')
     else:
-        text = f'Цена {amount} {quote} в {base} - {total_base}'
+        text = f'Цена {amount} {base} в {quote} - {total_base}'
         bot.send_message(message.chat.id, text)
 
 bot.polling()
