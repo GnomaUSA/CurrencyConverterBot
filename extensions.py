@@ -10,8 +10,8 @@ class CurrencyConverter:
     def get_price(base, quote, amount):
         try:
             r = requests.get(f'https://min-api.cryptocompare.com/data/price?fsym={keys[base]}&tsyms={keys[quote]}')
-            exchange_rate = json.loads(r.content)[keys[quote]] #base?
-            return exchange_rate * float(amount)
+            exchange_rate = json.loads(r.content)[keys[quote]]
+            return f"{exchange_rate * float(amount):.2f}"
         except Exception as e:
             raise APIException(f"Ошибка при получении цены: {e}")
 
